@@ -1,13 +1,33 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Text, Flex, Checkbox, TextField } from '@radix-ui/themes';
 import { Fluctuation } from './search';
 
 export type PriceType = 'buy' | 'sell';
 
 export const PriceForm = ({ onChange }: { onChange: (type: PriceType, price: number, fluctuation: Fluctuation) => void; }) => {
-  const [buyPrice, setBuyPrice] = useState<number | undefined>();
-  const [sellPrice, setSellPrice] = useState<number | undefined>();
-  const [cursed, setCursed] = useState<boolean>(false);
+  const [values, setValues] = useState<{
+    type: PriceType,
+    price?: number,
+    cursed: boolean,
+
+    formPrice: {
+      buy?: number
+      sell?: number
+    }
+  }>({
+    type: 'buy',
+    cursed: false,
+    formPrice: {},
+  })
+
+  useEffect(() => {
+    if (!values) return;
+    const { type, price, cursed } = values;
+
+    if (type && price) {
+      onChange(type, price, cursed ? 'cursed' : 'none');
+    }
+  }, [values]);
 
   return (
     <div>
@@ -18,12 +38,18 @@ export const PriceForm = ({ onChange }: { onChange: (type: PriceType, price: num
           <Text as="label" size="3">
             <Flex gap="3" align="center">
               買値
-              <TextField.Input type="number" pattern="[0-9]*" id="buyPrice" size="2" style={{ width: 100 }} value={buyPrice || ''} onChange={e => {
+              <TextField.Input type="number" pattern="[0-9]*" id="buyPrice" size="2" style={{ width: 100 }} value={values.formPrice.buy || ''} onChange={e => {
                 const price = +e.currentTarget.value;
 
-                setBuyPrice(price);
-                setSellPrice(undefined);
-                onChange('buy' as PriceType, price, cursed ? 'cursed' : 'none');
+                setValues({
+                  ...values,
+                  type: 'buy',
+                  price,
+                  formPrice: {
+                    buy: price,
+                    sell: undefined,
+                  }
+                })
               }} />
             </Flex>
           </Text>
@@ -31,12 +57,18 @@ export const PriceForm = ({ onChange }: { onChange: (type: PriceType, price: num
           <Text as="label" size="3">
             <Flex gap="3" align="center">
               売値
-              <TextField.Input type="number" pattern="[0-9]*" id="sellPrice" size="2" style={{ width: 100 }} value={sellPrice || ''} onChange={e => {
+              <TextField.Input type="number" pattern="[0-9]*" id="sellPrice" size="2" style={{ width: 100 }} value={values.formPrice.sell || ''} onChange={e => {
                 const price = +e.currentTarget.value;
 
-                setSellPrice(price);
-                setBuyPrice(undefined);
-                onChange('sell' as PriceType, +e.currentTarget.value, cursed ? 'cursed' : 'none');
+                setValues({
+                  ...values,
+                  type: 'sell',
+                  price,
+                  formPrice: {
+                    buy: undefined,
+                    sell: price,
+                  }
+                })
               }} />
             </Flex>
           </Text>
@@ -46,7 +78,7 @@ export const PriceForm = ({ onChange }: { onChange: (type: PriceType, price: num
         >
           <Text as="label" size="3">
             <Flex gap="2">
-              <Checkbox checked={cursed} onClick={_ => setCursed(!cursed)} />呪い
+              <Checkbox checked={values.cursed} onClick={_ => setValues({ ...values, cursed: !values.cursed })} />呪い
             </Flex>
           </Text>
         </div>
