@@ -1,20 +1,6 @@
-import { useState, useCallback } from 'react';
-import { Text, Flex, Checkbox } from '@radix-ui/themes';
-import * as Label from '@radix-ui/react-label';
+import { useState } from 'react';
+import { Text, Flex, Checkbox, TextField } from '@radix-ui/themes';
 import { Fluctuation } from './search';
-
-const labelStyle = { fontSize: '15px', fontWeight: 500, lineHeight: '35px' };
-const inputStyle = {
-  width: '100px',
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  borderRadius: '4px',
-  padding: '0 10px',
-  height: '35px',
-  fontSize: '15px',
-  lineHeight: '1',
-}
 
 export type PriceType = 'buy' | 'sell';
 
@@ -29,32 +15,36 @@ export const PriceForm = ({ onChange }: { onChange: (type: PriceType, price: num
         <div
           style={{ display: 'flex', padding: '0 15px 15px 15px', flexWrap: 'wrap', gap: 15, alignItems: 'center' }}
         >
-          <Label.Root htmlFor="buyPrice" style={labelStyle}>
-            買値
-          </Label.Root>
-          <input type="number" pattern="[0-9]*" id="buyPrice" value={buyPrice || ''} style={inputStyle} onChange={e => {
-            const price = +e.currentTarget.value;
+          <Text as="label" size="3">
+            <Flex gap="3" align="center">
+              買値
+              <TextField.Input type="number" pattern="[0-9]*" id="buyPrice" size="2" style={{ width: 100 }} value={buyPrice || ''} onChange={e => {
+                const price = +e.currentTarget.value;
 
-            setBuyPrice(price);
-            setSellPrice(undefined);
-            onChange('buy' as PriceType, price, cursed ? 'cursed' : 'none');
-          }} />
+                setBuyPrice(price);
+                setSellPrice(undefined);
+                onChange('buy' as PriceType, price, cursed ? 'cursed' : 'none');
+              }} />
+            </Flex>
+          </Text>
 
-          <Label.Root htmlFor="sellPrice" style={labelStyle}>
-            売値
-          </Label.Root>
-          <input type="number" pattern="[0-9]*" id="sellPrice" value={sellPrice || ''} style={inputStyle} onChange={e => {
-            const price = +e.currentTarget.value;
+          <Text as="label" size="3">
+            <Flex gap="3" align="center">
+              売値
+              <TextField.Input type="number" pattern="[0-9]*" id="sellPrice" size="2" style={{ width: 100 }} value={sellPrice || ''} onChange={e => {
+                const price = +e.currentTarget.value;
 
-            setSellPrice(price);
-            setBuyPrice(undefined);
-            onChange('sell' as PriceType, +e.currentTarget.value, cursed ? 'cursed' : 'none');
-          }} />
+                setSellPrice(price);
+                setBuyPrice(undefined);
+                onChange('sell' as PriceType, +e.currentTarget.value, cursed ? 'cursed' : 'none');
+              }} />
+            </Flex>
+          </Text>
         </div>
         <div
           style={{ display: 'flex', padding: '0 15px 30px 15px', flexWrap: 'wrap', gap: 15, alignItems: 'center' }}
         >
-          <Text as="label" size="2">
+          <Text as="label" size="3">
             <Flex gap="2">
               <Checkbox checked={cursed} onClick={_ => setCursed(!cursed)} />呪い
             </Flex>
