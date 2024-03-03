@@ -11,8 +11,8 @@ export const Pots = ({ values }: { values: ResourceItem[] }) => {
 
   return (
     <>
-      <PriceForm onChange={(type, price) => {
-        setResults(searchResourceItems(values, { type, price }, maxPotSpace))
+      <PriceForm onChange={(type, price, fluctuation) => {
+        setResults(searchResourceItems(values, { type, price }, { maxResource: maxPotSpace, fluctuation }))
       }} />
 
       {results.length > 0 && (

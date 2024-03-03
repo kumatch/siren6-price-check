@@ -11,8 +11,8 @@ export const Staves = ({ values }: { values: ResourceItem[] }) => {
 
   return (
     <>
-      <PriceForm onChange={(type, price) => {
-        setResults(searchResourceItems(values, { type, price }, maxResource))
+      <PriceForm onChange={(type, price, fluctuation) => {
+        setResults(searchResourceItems(values, { type, price }, { maxResource, fluctuation }))
       }} />
 
       {results.length > 0 && (

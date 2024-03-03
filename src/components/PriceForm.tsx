@@ -1,9 +1,11 @@
 import { useState, useCallback } from 'react';
+import { Text, Flex, Checkbox } from '@radix-ui/themes';
 import * as Label from '@radix-ui/react-label';
+import { Fluctuation } from './search';
 
 const labelStyle = { fontSize: '15px', fontWeight: 500, lineHeight: '35px' };
 const inputStyle = {
-  width: '200px',
+  width: '100px',
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -16,15 +18,16 @@ const inputStyle = {
 
 export type PriceType = 'buy' | 'sell';
 
-export const PriceForm = ({ onChange }: { onChange: (type: PriceType, price: number) => void; }) => {
+export const PriceForm = ({ onChange }: { onChange: (type: PriceType, price: number, fluctuation: Fluctuation) => void; }) => {
   const [buyPrice, setBuyPrice] = useState<number | undefined>();
   const [sellPrice, setSellPrice] = useState<number | undefined>();
+  const [cursed, setCursed] = useState<boolean>(false);
 
   return (
     <div>
       <div>
         <div
-          style={{ display: 'flex', padding: '0 20px 20px 20px', flexWrap: 'wrap', gap: 15, alignItems: 'center' }}
+          style={{ display: 'flex', padding: '0 15px 15px 15px', flexWrap: 'wrap', gap: 15, alignItems: 'center' }}
         >
           <Label.Root htmlFor="buyPrice" style={labelStyle}>
             買値
@@ -34,13 +37,9 @@ export const PriceForm = ({ onChange }: { onChange: (type: PriceType, price: num
 
             setBuyPrice(price);
             setSellPrice(undefined);
-            onChange('buy' as PriceType, price);
+            onChange('buy' as PriceType, price, cursed ? 'cursed' : 'none');
           }} />
-        </div>
 
-        <div
-          style={{ display: 'flex', padding: '0 20px 20px 20px', flexWrap: 'wrap', gap: 15, alignItems: 'center' }}
-        >
           <Label.Root htmlFor="sellPrice" style={labelStyle}>
             売値
           </Label.Root>
@@ -49,10 +48,19 @@ export const PriceForm = ({ onChange }: { onChange: (type: PriceType, price: num
 
             setSellPrice(price);
             setBuyPrice(undefined);
-            onChange('sell' as PriceType, +e.currentTarget.value);
+            onChange('sell' as PriceType, +e.currentTarget.value, cursed ? 'cursed' : 'none');
           }} />
         </div>
+        <div
+          style={{ display: 'flex', padding: '0 15px 30px 15px', flexWrap: 'wrap', gap: 15, alignItems: 'center' }}
+        >
+          <Text as="label" size="2">
+            <Flex gap="2">
+              <Checkbox checked={cursed} onClick={_ => setCursed(!cursed)} />呪い
+            </Flex>
+          </Text>
+        </div>
       </div>
-    </div>
+    </div >
   );
 };

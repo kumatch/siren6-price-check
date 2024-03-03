@@ -6,6 +6,7 @@ import '@radix-ui/themes/styles.css';
 import { Theme } from '@radix-ui/themes';
 import { Box, Container, Heading, Button, Tabs, Text } from '@radix-ui/themes';
 import { Items } from './components/Items'
+import { BlessingItems } from './components/BlessingItems'
 import { Pots } from './components/Pots'
 import { Staves } from './components/Staves'
 import type { Data } from './data/types';
@@ -51,10 +52,10 @@ const Body = () => {
           <Staves values={data.staves} />
         </Tabs.Content>
         <Tabs.Content value="scrolls">
-          <Items values={data.scrolls} />
+          <BlessingItems values={data.scrolls} />
         </Tabs.Content>
         <Tabs.Content value="grass">
-          <Items values={data.grass} />
+          <BlessingItems values={data.grass} />
         </Tabs.Content>
       </Box>
     </Tabs.Root>
